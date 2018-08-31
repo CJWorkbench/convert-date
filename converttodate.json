@@ -27,7 +27,7 @@
       "name": "Convert non-dates to null",
       "id_name": "type_null",
       "type": "checkbox",
-      "default": "False"
+      "default": "True"
     }
   ]
 }
