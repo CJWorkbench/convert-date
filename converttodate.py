@@ -33,15 +33,12 @@ def render(table, params):
     type_date = date_input_map[params['type_date']]
     type_null = params['type_null']
 
+    original_table = table.copy()
     error_map = {'first': None}
 
     for column in columns:
         # For now, re-categorize after replace. Can improve performance by operating
         # directly on categorical index, if needed
-
-        # Find first error cell if errors set to true
-        if not error_map['first'] and not type_null:
-            old_series = table[column].copy()
 
         if table[column].dtype.name == 'category':
             table[column] = prep_cat(table[column])
@@ -49,9 +46,9 @@ def render(table, params):
                                            format=input_settings_map[type_date]['format'],
                                            infer_datetime_format=input_settings_map[type_date]['infer_datetime_format'],
                                            exact=False, cache=True)
-        # Just pass numbers for now..
+        # For now, assume value is year and cast to string
         elif np.issubdtype(table[column].dtype, np.number):
-            table[column] = pd.to_datetime(table[column], errors='coerce',
+            table[column] = pd.to_datetime(table[column].astype(str), errors='coerce',
                                            format=input_settings_map[type_date]['format'],
                                            infer_datetime_format=input_settings_map[type_date]['infer_datetime_format'],
                                            exact=False, cache=True)
@@ -64,12 +61,12 @@ def render(table, params):
 
         if not type_null:
             error_map = find_errors(table[column], error_map) if error_map['first'] \
-                    else find_errors(table[column], error_map, old_series)
+                    else find_errors(table[column], error_map, original_table[column])
 
     if not type_null:
         error_message = display_error(error_map)
         if error_message:
-            return error_message
+            return (original_table, error_message)
 
     return table
 
@@ -83,7 +80,7 @@ def prep_cat(series):
 def find_errors(new_series, error_map, old_series=None):
     error_map[new_series.name] = new_series[new_series.isnull()].index
 
-    if type(old_series) == pd.Series:
+    if type(old_series) == pd.Series and error_map[new_series.name].empty is False:
         error_map['first'] = {
             'column': old_series.name,
             'row': error_map[old_series.name][0] + 1,

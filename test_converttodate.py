@@ -12,8 +12,8 @@ class TestConvertDate(unittest.TestCase):
         # Very simple test cases for now to deliver MVP, auto-detection does not catch most cases
         self.table = pd.DataFrame([
             ['08/07/2018', '07/08/2018', '2018-08-07', '08.07.2018', '08/07/2018', 2018, 'August 7, 2018'],
-            [' 08/07/2018T00:00:00 ', ' 07/08/2018T00:00:00 ', ' 2018.08.07T00:00:00 ', '08.07.2018', 99, 99, 'August 07, 2018'],
-            ['..08/07/2018T00:00:00:00..', '..07/08/2018T00:00:00..', '..2018.08.07T00:00:00..', '08.07.2018', 99, 99, 'August 07, 2018']],
+            [' 08/07/2018T00:00:00 ', ' 07/08/2018T00:00:00 ', ' 2018.08.07T00:00:00 ', '08.07.2018', 99, 1960, 'August 07, 2018'],
+            ['..08/07/2018T00:00:00:00..', '..07/08/2018T00:00:00..', '..2018.08.07T00:00:00..', '08.07.2018', 99, 99999, 'August 07, 2018']],
             columns=['us', 'eu', 'yearfirst', 'catcol', 'null', 'number', 'written'])
 
         self.table['catcol'] = self.table['catcol'].astype('category')
@@ -39,12 +39,14 @@ class TestConvertDate(unittest.TestCase):
             self.assertTrue(y.to_datetime64() == reference_date)
 
     def test_numbers(self):
-        # Undecided what to do with numbers, just assert result is pd.Timestamp.
+        # For now, assume value is year and cast to string
         params = {'colnames': 'number', 'type_null': True, 'type_date': date_input_map.index('auto')}
 
         out = render(self.table.copy(), params)
-        for y in out['number']:
-            self.assertTrue(type(y) == pd.Timestamp)
+
+        self.assertTrue(out['number'][0] == np.datetime64('2018-01-01T00:00:00.000000000'))
+        self.assertTrue(out['number'][1] == np.datetime64('1960-01-01T00:00:00.000000000'))
+        self.assertTrue(pd.isna(out['number'][2]))
 
     def test_auto(self):
         # All cells should have the same date
@@ -59,8 +61,14 @@ class TestConvertDate(unittest.TestCase):
         params = {'colnames': 'null', 'type_null': False, 'type_date': date_input_map.index('auto')}
 
         # Test exact error message
-        self.assertTrue(render(self.table.copy(), params) == "'99' in row 2 of 'null' cannot be converted. Overall, there are 2 errors in 2 columns. Select 'non-dates to null' to set these cells to null")
+        self.assertTrue(render(self.table.copy(), params)[1] == "'99' in row 2 of 'null' cannot be converted. Overall, there are 2 errors in 2 columns. Select 'non-dates to null' to set these cells to null")
 
+        # No error
+        params = {'colnames': 'catcol,written,yearfirst', 'type_null': False, 'type_date': date_input_map.index('auto')}
+        out = render(self.table.copy(), params)
+        for y in out[['catcol', 'yearfirst', 'written']].values:
+            for x in y:
+                self.assertTrue(x == reference_date)
 
 if __name__ == '__main__':
     unittest.main()
