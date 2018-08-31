@@ -2,7 +2,7 @@
   "name": "Convert to date & time",
   "id_name": "convert-date",
   "category" : "Clean",
-  "icon": "clean",
+  "icon": "calendar",
   "description": "",
   "parameters": [
     {
