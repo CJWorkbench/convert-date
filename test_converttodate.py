@@ -11,7 +11,7 @@ class TestConvertDate(unittest.TestCase):
     def setUp(self):
         # Very simple test cases for now to deliver MVP, auto-detection does not catch most cases
         self.table = pd.DataFrame([
-            ['08/07/2018', '07/08/2018', '2018-08-07', '08.07.2018', '08/07/2018', 99, 'August 7, 2018'],
+            ['08/07/2018', '07/08/2018', '2018-08-07', '08.07.2018', '08/07/2018', 2018, 'August 7, 2018'],
             [' 08/07/2018T00:00:00 ', ' 07/08/2018T00:00:00 ', ' 2018.08.07T00:00:00 ', '08.07.2018', 99, 99, 'August 07, 2018'],
             ['..08/07/2018T00:00:00:00..', '..07/08/2018T00:00:00..', '..2018.08.07T00:00:00..', '08.07.2018', 99, 99, 'August 07, 2018']],
             columns=['us', 'eu', 'yearfirst', 'catcol', 'null', 'number', 'written'])
@@ -39,9 +39,12 @@ class TestConvertDate(unittest.TestCase):
             self.assertTrue(y.to_datetime64() == reference_date)
 
     def test_numbers(self):
-        # Should throw type error
-        params = {'colnames': 'eu,number', 'type_null': True, 'type_date': date_input_map.index('date (e.u.) dd/mm/yyyy')}
-        self.assertTrue(render(self.table.copy(), params) == 'Cannot convert numerical columns.')
+        # Undecided what to do with numbers, just assert result is pd.Timestamp.
+        params = {'colnames': 'number', 'type_null': True, 'type_date': date_input_map.index('auto')}
+
+        out = render(self.table.copy(), params)
+        for y in out['number']:
+            self.assertTrue(type(y) == pd.Timestamp)
 
     def test_auto(self):
         # All cells should have the same date
@@ -56,7 +59,7 @@ class TestConvertDate(unittest.TestCase):
         params = {'colnames': 'null', 'type_null': False, 'type_date': date_input_map.index('auto')}
 
         # Test exact error message
-        self.assertTrue(render(self.table.copy(), params) == "Format error in row 2 of 'null'. Overall, there are 2 errors in 1 columns. Select 'non-dates to null' to set these cells to null")
+        self.assertTrue(render(self.table.copy(), params) == "'99' in row 2 of 'null' cannot be converted. Overall, there are 2 errors in 2 columns. Select 'non-dates to null' to set these cells to null")
 
 
 if __name__ == '__main__':

@@ -2,6 +2,9 @@
 This module converts a string column to a datetime column.
 Inputting a numerical column will throw an error.
 """
+import pandas as pd
+import numpy as np
+
 
 date_input_map = 'AUTO|Date (U.S.) MM/DD/YYYY|Date (E.U.) DD/MM/YYYY'.lower().split('|')
 
@@ -30,16 +33,25 @@ def render(table, params):
     type_date = date_input_map[params['type_date']]
     type_null = params['type_null']
 
-    # For now, numerical types are not supported. Throw error if any input columns are numerical
-    if any([np.issubdtype(dtype, np.number) for dtype in table[columns].dtypes if str(dtype) != 'category']):
-        return 'Cannot convert numerical columns.'
+    error_map = {'first': None}
 
     for column in columns:
         # For now, re-categorize after replace. Can improve performance by operating
         # directly on categorical index, if needed
+
+        # Find first error cell if errors set to true
+        if not error_map['first'] and not type_null:
+            old_series = table[column].copy()
+
         if table[column].dtype.name == 'category':
             table[column] = prep_cat(table[column])
             table[column] = pd.to_datetime(table[column].astype(str), errors='coerce',
+                                           format=input_settings_map[type_date]['format'],
+                                           infer_datetime_format=input_settings_map[type_date]['infer_datetime_format'],
+                                           exact=False, cache=True)
+        # Just pass numbers for now..
+        elif np.issubdtype(table[column].dtype, np.number):
+            table[column] = pd.to_datetime(table[column], errors='coerce',
                                            format=input_settings_map[type_date]['format'],
                                            infer_datetime_format=input_settings_map[type_date]['infer_datetime_format'],
                                            exact=False, cache=True)
@@ -50,10 +62,14 @@ def render(table, params):
                                            infer_datetime_format=input_settings_map[type_date]['infer_datetime_format'],
                                            exact=False, cache=True)
 
+        if not type_null:
+            error_map = find_errors(table[column], error_map) if error_map['first'] \
+                    else find_errors(table[column], error_map, old_series)
+
     if not type_null:
-        result = find_errors(table[columns])
-        if result:
-            return result
+        error_message = display_error(error_map)
+        if error_message:
+            return error_message
 
     return table
 
@@ -64,20 +80,30 @@ def prep_cat(series):
             series.fillna('', inplace=True)
     return series
 
-def find_errors(table):
-    error_map = {}
-    for column in table.columns:
-        error_map[column] = table[column][table[column].isnull()].index
+def find_errors(new_series, error_map, old_series=None):
+    error_map[new_series.name] = new_series[new_series.isnull()].index
 
+    if type(old_series) == pd.Series:
+        error_map['first'] = {
+            'column': old_series.name,
+            'row': error_map[old_series.name][0] + 1,
+            'value': old_series[error_map[old_series.name][0]]
+        }
+
+    return error_map
+
+def display_error(error_map):
     num_errors = 0
 
-    for errors in error_map.values():
-        num_errors += len(errors)
+    for column, errors in error_map.items():
+        if column != 'first':
+            num_errors += len(errors)
 
     if num_errors > 0:
-        first_column = list(error_map.keys())[0]
-        first_row = error_map[first_column][0]
-        return f"Format error in row {first_row + 1} of '{first_column}'. " \
+        first_column = error_map['first']['column']
+        first_row = error_map['first']['row']
+        first_value = error_map['first']['value']
+        return f"'{first_value}' in row {first_row} of '{first_column}' cannot be converted. " \
                 f'Overall, there are {num_errors} errors in {len(error_map.keys())} columns. ' \
                 f"Select 'non-dates to null' to set these cells to null"
-    return
+    return None
