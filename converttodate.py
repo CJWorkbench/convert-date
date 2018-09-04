@@ -100,7 +100,9 @@ def display_error(error_map):
         first_column = error_map['first']['column']
         first_row = error_map['first']['row']
         first_value = error_map['first']['value']
+        num_columns = len(error_map.keys()) - 1
         return f"'{first_value}' in row {first_row} of '{first_column}' cannot be converted. " \
-                f'Overall, there are {num_errors} errors in {len(error_map.keys())} columns. ' \
+                f'Overall, there {"are " + str(num_errors) + " errors" if num_errors > 1 else "is " + str(num_errors) + " error"} ' \
+                f'in {num_columns} column{"s" if num_columns > 1 else ""}. ' \
                 f"Select 'non-dates to null' to set these cells to null"
     return None

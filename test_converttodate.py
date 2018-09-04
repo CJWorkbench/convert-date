@@ -61,7 +61,12 @@ class TestConvertDate(unittest.TestCase):
         params = {'colnames': 'null', 'type_null': False, 'type_date': date_input_map.index('auto')}
 
         # Test exact error message
-        self.assertTrue(render(self.table.copy(), params)[1] == "'99' in row 2 of 'null' cannot be converted. Overall, there are 2 errors in 2 columns. Select 'non-dates to null' to set these cells to null")
+        self.assertTrue(render(self.table.copy(), params)[1] == "'99' in row 2 of 'null' cannot be converted. Overall, there are 2 errors in 1 column. Select 'non-dates to null' to set these cells to null")
+
+        params = {'colnames': 'null,number', 'type_null': False, 'type_date': date_input_map.index('auto')}
+
+        # Test exact error message
+        self.assertTrue(render(self.table.copy(), params)[1] == "'99' in row 2 of 'null' cannot be converted. Overall, there are 3 errors in 2 columns. Select 'non-dates to null' to set these cells to null")
 
         # No error
         params = {'colnames': 'catcol,written,yearfirst', 'type_null': False, 'type_date': date_input_map.index('auto')}
