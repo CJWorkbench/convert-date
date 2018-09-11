@@ -2,6 +2,7 @@
   "name": "Convert to date & time",
   "id_name": "convert-date",
   "category" : "Clean",
+  "help_url":"modules/convert-to-date-time",
   "icon": "calendar",
   "description": "",
   "parameters": [
