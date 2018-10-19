@@ -66,7 +66,7 @@ def render(table, params):
     if not type_null:
         error_message = display_error(error_map)
         if error_message:
-            return (original_table, error_message)
+            return (None, error_message)
 
     return table
 
