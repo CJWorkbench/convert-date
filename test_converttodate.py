@@ -70,6 +70,15 @@ class TestConvertDate(unittest.TestCase):
         result = render(table.copy(), params)
         assert_frame_equal(result, expected)
 
+    def test_date_input(self):
+        table = pd.DataFrame({
+            'A': [reference_date, pd.NaT, reference_date]
+        })
+        params = {'colnames': 'A', 'type_null': False, 'type_date': 0}
+        expected = table.copy()
+        result = render(table.copy(), params)
+        assert_frame_equal(result, expected)
+
     def test_categories(self):
         table = pd.DataFrame({
             'A': ['August 7, 2018', None, 'T8'],
