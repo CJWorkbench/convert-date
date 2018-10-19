@@ -15,7 +15,7 @@ class TestConvertDate(unittest.TestCase):
         assert_frame_equal(result, table)
 
     def test_us(self):
-        # All cells should have the same date
+        # All values should have the same date
         table = pd.DataFrame({
             'us': ['08/07/2018', ' 08/07/2018T00:00:00 ',
                    '..08/07/2018T00:00:00:00..']
@@ -26,7 +26,7 @@ class TestConvertDate(unittest.TestCase):
         assert_frame_equal(result, expected)
 
     def test_eu(self):
-        # All cells should have the same date
+        # All values should have the same date
         table = pd.DataFrame({
             'eu': ['07/08/2018', ' 07/08/2018T00:00:00 ',
                    '..07/08/2018T00:00:00..'],
@@ -70,8 +70,33 @@ class TestConvertDate(unittest.TestCase):
         result = render(table.copy(), params)
         assert_frame_equal(result, expected)
 
+    def test_categories(self):
+        table = pd.DataFrame({
+            'A': ['August 7, 2018', None, 'T8'],
+        }, dtype='category')
+        params = {'colnames': 'A', 'type_null': True, 'type_date': 0}
+        expected = pd.DataFrame({
+            'A': [reference_date, pd.NaT, pd.NaT],
+        })
+
+        result = render(table.copy(), params)
+        assert_frame_equal(result, expected)
+
+    def test_null_input_is_not_error(self):
+        table = pd.DataFrame({'null': ['08/07/2018', None, 99]})
+        params = {'colnames': 'null', 'type_null': False, 'type_date': 0}
+
+        self.assertEqual(render(table.copy(), params), (
+            None,
+            (
+                "'99' in row 3 of 'null' cannot be converted. Overall, there "
+                "is 1 error in 1 column. Select 'non-dates to null' to set "
+                'these values to null'
+            )
+        ))
+
     def test_error(self):
-        table = pd.DataFrame({'null': ['08/07/2018', 99, 99]})
+        table = pd.DataFrame({'null': ['08/07/2018', 99, 98]})
         params = {'colnames': 'null', 'type_null': False, 'type_date': 0}
 
         self.assertEqual(render(table.copy(), params), (
@@ -79,7 +104,7 @@ class TestConvertDate(unittest.TestCase):
             (
                 "'99' in row 2 of 'null' cannot be converted. Overall, there "
                 "are 2 errors in 1 column. Select 'non-dates to null' to set "
-                'these cells to null'
+                'these values to null'
             )
         ))
 
@@ -96,7 +121,7 @@ class TestConvertDate(unittest.TestCase):
             (
                 "'99' in row 2 of 'null' cannot be converted. Overall, there "
                 "are 3 errors in 2 columns. Select 'non-dates to null' to set "
-                'these cells to null'
+                'these values to null'
             )
         ))
 
