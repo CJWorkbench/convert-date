@@ -79,6 +79,20 @@ class TestConvertDate(unittest.TestCase):
         result = render(table.copy(), params)
         assert_frame_equal(result, expected)
 
+    def test_multi_types_error(self):
+        table = pd.DataFrame({
+            'A': [reference_date, pd.NaT, reference_date],
+            'B': ['not a date', 'another bad date', 'no way'],
+        })
+        params = {'colnames': 'A,B', 'type_null': False, 'type_date': 0}
+        expected = table.copy()
+        result = render(table.copy(), params)
+        self.assertEqual(result, (None, (
+            "'not a date' in row 1 of 'B' cannot be converted. Overall, there "
+            "are 3 errors in 1 column. Select 'non-dates to null' to set "
+            'these values to null'
+        )))
+
     def test_categories(self):
         table = pd.DataFrame({
             'A': ['August 7, 2018', None, 'T8'],
@@ -105,7 +119,7 @@ class TestConvertDate(unittest.TestCase):
         ))
 
     def test_error(self):
-        table = pd.DataFrame({'null': ['08/07/2018', 99, 98]})
+        table = pd.DataFrame({'null': ['08/07/2018', '99', '98']})
         params = {'colnames': 'null', 'type_null': False, 'type_date': 0}
 
         self.assertEqual(render(table.copy(), params), (
@@ -119,7 +133,7 @@ class TestConvertDate(unittest.TestCase):
 
     def test_error_multicolumn(self):
         table = pd.DataFrame({
-            'null': ['08/07/2018', 99, 99],
+            'null': ['08/07/2018', '99', '99'],
             'number': [1960, 2018, 99999],
         })
         params = {'colnames': 'null,number', 'type_null': False,
