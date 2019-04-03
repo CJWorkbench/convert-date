@@ -88,8 +88,7 @@ class ConverttodateTests(unittest.TestCase):
         table = pd.DataFrame({
             'A': ['2019-01-01T00:00:00.000', '2019-03-02T12:02:13.000Z']
         }, dtype='category')
-        result = render(table,
-                        {'colnames': 'A', 'type_null': True, 'type_date': 0})
+        result = render(table, P('A', 'auto'))
         assert_frame_equal(
             result,
             pd.DataFrame({'A': [
