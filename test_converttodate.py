@@ -231,12 +231,25 @@ class ConverttodateTests(unittest.TestCase):
             {"null": ["08/07/2018", "99", "99"], "number": [1960, 2018, 99999]}
         )
         result = render(table, P(["null", "number"], "auto", False))
-
         self.assertEqual(
             result,
             (
                 "'99' in row 2 of 'null' cannot be converted. Overall, there "
                 "are 3 errors in 2 columns. Select 'non-dates to null' to set "
+                "these values to null"
+            ),
+        )
+
+    def test_error_multicolumn_first_on_row_0(self):
+        # Regression, 2019-08-19: `error_count.a_row` was 0, so `rhs.a_row` was
+        # chosen instead, but it was None.
+        table = pd.DataFrame({"A": ["bad"], "B": [None]}, dtype=str)
+        result = render(table, P(["A", "B"], "auto", False))
+        self.assertEqual(
+            result,
+            (
+                "'bad' in row 1 of 'A' cannot be converted. Overall, there "
+                "is 1 error in 1 column. Select 'non-dates to null' to set "
                 "these values to null"
             ),
         )

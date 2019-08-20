@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Optional
 import pandas as pd
@@ -36,13 +36,14 @@ class ErrorCount:
 
     def __add__(self, rhs: "ErrorCount") -> "ErrorCount":
         """Add more errors to this ErrorCount."""
-        return ErrorCount(
-            self.a_column or rhs.a_column,
-            self.a_row or rhs.a_row,
-            self.a_value or rhs.a_value,
-            self.total + rhs.total,
-            self.n_columns + rhs.n_columns,
-        )
+        if self.total == 0:
+            return rhs
+        else:
+            return replace(
+                self,
+                total=self.total + rhs.total,
+                n_columns=self.n_columns + rhs.n_columns,
+            )
 
     def __str__(self):
         if self.total == 1:
