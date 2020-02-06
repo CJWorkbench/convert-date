@@ -1,9 +1,13 @@
+import importlib
 import unittest
+
 import numpy as np
 import pandas as pd
-from pandas.testing import assert_frame_equal
-from converttodate import render, migrate_params
 from cjwmodule.i18n import I18nMessage
+from pandas.testing import assert_frame_equal
+
+render = importlib.import_module("convert-date").render
+migrate_params = importlib.import_module("convert-date").migrate_params
 
 
 class MigrateParamsTests(unittest.TestCase):
