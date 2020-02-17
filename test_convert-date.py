@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
-from cjwmodule.i18n import I18nMessage
+from cjwmodule.testing.i18n import i18n_message
 from pandas.testing import assert_frame_equal
 
 render = importlib.import_module("convert-date").render
@@ -193,7 +193,7 @@ class ConverttodateTests(unittest.TestCase):
         result = render(table.copy(), P(["A", "B"], "auto", False))
         self.assertEqual(
             result,
-            I18nMessage(
+            i18n_message(
                 "ErrorCount.message",
                 {
                     "a_value": "not a date",
@@ -201,8 +201,7 @@ class ConverttodateTests(unittest.TestCase):
                     "a_column": "B",
                     "n_errors": 3,
                     "n_columns": 1,
-                },
-                "module",
+                }
             ),
         )
 
@@ -218,16 +217,15 @@ class ConverttodateTests(unittest.TestCase):
         result = render(table, P(["null"], "auto", False))
         self.assertEqual(
             result,
-            I18nMessage(
+            i18n_message(
                 "ErrorCount.message",
                 {
-                    "a_value": 99,
+                    "a_value": "99",
                     "a_row": 3,
                     "a_column": "null",
                     "n_errors": 1,
                     "n_columns": 1,
-                },
-                "module",
+                }
             ),
         )
 
@@ -236,7 +234,7 @@ class ConverttodateTests(unittest.TestCase):
         result = render(table, P(["null"], "auto", False))
         self.assertEqual(
             result,
-            I18nMessage(
+            i18n_message(
                 "ErrorCount.message",
                 {
                     "a_value": "99",
@@ -244,8 +242,7 @@ class ConverttodateTests(unittest.TestCase):
                     "a_column": "null",
                     "n_errors": 2,
                     "n_columns": 1,
-                },
-                "module",
+                }
             ),
         )
 
@@ -256,7 +253,7 @@ class ConverttodateTests(unittest.TestCase):
         result = render(table, P(["null", "number"], "auto", False))
         self.assertEqual(
             result,
-            I18nMessage(
+            i18n_message(
                 "ErrorCount.message",
                 {
                     "a_value": "99",
@@ -264,8 +261,7 @@ class ConverttodateTests(unittest.TestCase):
                     "a_column": "null",
                     "n_errors": 3,
                     "n_columns": 2,
-                },
-                "module",
+                }
             ),
         )
 
@@ -276,7 +272,7 @@ class ConverttodateTests(unittest.TestCase):
         result = render(table, P(["A", "B"], "auto", False))
         self.assertEqual(
             result,
-            I18nMessage(
+            i18n_message(
                 "ErrorCount.message",
                 {
                     "a_value": "bad",
@@ -285,7 +281,6 @@ class ConverttodateTests(unittest.TestCase):
                     "n_errors": 1,
                     "n_columns": 1,
                 },
-                "module",
             ),
         )
 
