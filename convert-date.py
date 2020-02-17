@@ -84,7 +84,7 @@ class ErrorCount:
             column = in_series.name
             row = out_errors[0]
             value = in_series[row]
-            return ErrorCount(column, row, value, len(out_errors), 1)
+            return ErrorCount(column, int(row), str(value), len(out_errors), 1)
 
 
 def render(table, params):
