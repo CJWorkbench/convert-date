@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-06 21:24+0000\n"
+"POT-Creation-Date: 2020-02-18 15:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: el\n"
@@ -20,25 +20,25 @@ msgstr ""
 "Generated-By: Babel 2.8.0\n"
 
 msgid "_spec.name"
-msgstr ""
+msgstr "Μετατροπή σε ημερομηνία & ώρα"
 
 msgid "_spec.description"
-msgstr ""
+msgstr "Μετατροπή στηλών κειμένου σε ημερομηνία και ώρα."
 
 msgid "_spec.parameters.input_format.name"
-msgstr ""
+msgstr "Μορφή εισαγωγής"
 
 msgid "_spec.parameters.input_format.options.auto.label"
-msgstr ""
+msgstr "ΑΥΤΟΜΑΤΗ"
 
 msgid "_spec.parameters.input_format.options.us.label"
-msgstr ""
+msgstr "Ημερομηνία (ΗΠΑ) μμ/ηη/εεεε"
 
 msgid "_spec.parameters.input_format.options.eu.label"
-msgstr ""
+msgstr "Ημερομηνία (ΕΕ) ηη/μμ/εεεε"
 
 msgid "_spec.parameters.error_means_null.name"
-msgstr ""
+msgstr "Μετατροπή μη ημερομηνιών σε κενό"
 
 #: convert-date.py:52
 msgid "ErrorCount.message"
