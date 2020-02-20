@@ -8,6 +8,7 @@ parameters:
 - id_name: colnames
   name: ''
   type: multicolumn
+  column_types: [ datetime, text ]
 - id_name: input_format
   name: 'Input format'
   type: menu
