@@ -1,8 +1,8 @@
-#. default-message: Convert to date & time
+#. default-message: Convert to timestamp
 msgid "_spec.name"
 msgstr ""
 
-#. default-message: Convert text columns to date & time.
+#. default-message: Convert text columns to timestamp.
 msgid "_spec.description"
 msgstr ""
 
