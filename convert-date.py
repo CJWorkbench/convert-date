@@ -4,7 +4,6 @@ from typing import Optional
 
 import pandas as pd
 from cjwmodule import i18n
-from pandas.api.types import is_numeric_dtype
 
 
 class InputFormat(Enum):
