@@ -1,4 +1,4 @@
-#. default-message: Convert to timestamp
+#. default-message: Convert text to timestamp
 msgid "_spec.name"
 msgstr ""
 
@@ -27,7 +27,7 @@ msgid "_spec.parameters.error_means_null.name"
 msgstr ""
 
 #. default-message: “{a_value}” in row {a_row} of “{a_column}” cannot be converted. {n_errors, plural,   one {Overall, there is # error in {n_columns, plural, other {# columns} one {# column}}.}   other {Overall, there are # errors in {n_columns, plural, other {# columns} one {# column}}.} } Select 'non-dates to null' to set these values to null.
-#: convert-date.py:52
+#: convert-date.py:51
 msgid "ErrorCount.message"
 msgstr ""
 

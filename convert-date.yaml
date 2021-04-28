@@ -1,5 +1,5 @@
 id_name: 'convert-date'
-name: 'Convert to timestamp'
+name: 'Convert text to timestamp'
 category: Clean
 help_url: modules/convert-to-date-time
 icon: calendar
