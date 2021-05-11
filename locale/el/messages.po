@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-22 18:39+0000\n"
+"POT-Creation-Date: 2021-05-11 15:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.0\n"
+"Generated-By: Babel 2.9.1\n"
 
 #, fuzzy
 msgid "_spec.name"
@@ -30,12 +30,15 @@ msgstr "Μετατροπή στηλών κειμένου σε ημερομηνί
 msgid "_spec.parameters.input_format.name"
 msgstr "Μορφή εισαγωγής"
 
+#, fuzzy
 msgid "_spec.parameters.input_format.options.auto.label"
 msgstr "ΑΥΤΟΜΑΤΗ"
 
+#, fuzzy
 msgid "_spec.parameters.input_format.options.us.label"
 msgstr "Ημερομηνία (ΗΠΑ) μμ/ηη/εεεε"
 
+#, fuzzy
 msgid "_spec.parameters.input_format.options.eu.label"
 msgstr "Ημερομηνία (ΕΕ) ηη/μμ/εεεε"
 

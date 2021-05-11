@@ -10,15 +10,15 @@ msgstr ""
 msgid "_spec.parameters.input_format.name"
 msgstr ""
 
-#. default-message: AUTO
+#. default-message: Automatic
 msgid "_spec.parameters.input_format.options.auto.label"
 msgstr ""
 
-#. default-message: Date (U.S.) MM/DD/YYYY
+#. default-message: United States – Month before Day
 msgid "_spec.parameters.input_format.options.us.label"
 msgstr ""
 
-#. default-message: Date (E.U.) DD/MM/YYYY
+#. default-message: Europe – Day before Month
 msgid "_spec.parameters.input_format.options.eu.label"
 msgstr ""
 
